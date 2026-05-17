@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NGO Dashboard — Give & Gather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a class="sb-logo" href="index.html">Give &amp; <em>Gather</em></a>
+    <div class="sb-profile">
+      <div class="sb-avatar" id="sb-initials">RB</div>
+      <div class="sb-name" id="sb-org-name">Roti Bank</div>
+      <div class="sb-area" id="sb-area">📍 Shivaji Nagar</div>
+    </div>
+    <ul class="sb-nav">
+      <li><a class="active" onclick="showPage('overview')" href="#"><span class="sb-icon">🏠</span>Overview</a></li>
+      <li><a onclick="showPage('requests')" href="#"><span class="sb-icon">📋</span>My Requests</a></li>
+      <li><a onclick="showPage('matches')" href="#"><span class="sb-icon">🔗</span>Matches<span class="sb-badge">3</span></a></li>
+      <li><a onclick="showPage('messages')" href="#"><span class="sb-icon">💬</span>Messages<span class="sb-badge">2</span></a></li>
+    </ul>
+    <div class="sb-footer">
+      <a href="index.html">← Main site</a>
+      <a href="#" onclick="doSignOut()" style="margin-top:4px">Sign out</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="dash-main">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="page-view active" id="page-overview">
+      <div class="topbar">
+        <div>
+          <h1 id="greet-name">Good morning 👋</h1>
+          <p>Here's what's happening with your requests today.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Post a request</button>
+      </div>
+      <div class="stat-row">
+        <div class="stat-card"><div class="sc-label">Active requests</div><div class="sc-num" id="sc-active">—</div><div class="sc-sub">live now</div></div>
+        <div class="stat-card"><div class="sc-label">Matches found</div><div class="sc-num">3</div><div class="sc-sub">ready to claim</div></div>
+        <div class="stat-card"><div class="sc-label">Fulfilled this month</div><div class="sc-num" id="sc-fulfilled">—</div><div class="sc-sub">↑ from last month</div></div>
+        <div class="stat-card"><div class="sc-label">People served</div><div class="sc-num">840</div><div class="sc-sub">cumulative</div></div>
+      </div>
+      <div class="sec-head"><h2>Recent requests</h2><a class="sec-link" href="#" onclick="showPage('requests')">View all →</a></div>
+      <div class="req-list" id="overview-req-list"></div>
+    </div>
+
+    <!-- ── MY REQUESTS ── -->
+    <div class="page-view" id="page-requests">
+      <div class="topbar">
+        <h1>My Requests</h1>
+        <button class="btn btn-primary btn-sm" onclick="openPostModal()">+ Post a request</button>
+      </div>
+      <div class="search-wrap" style="max-width:400px">
+        <input type="text" placeholder="Search your requests…" oninput="filterReqList(this.value)"/>
+      </div>
+      <div class="req-list" id="all-req-list"></div>
+    </div>
+
+    <!-- ── MATCHES ── -->
+    <div class="page-view" id="page-matches">
+      <div class="topbar"><h1>Donor Matches</h1></div>
+      <p style="font-size:13px;color:var(--ink-muted);margin-bottom:1.5rem">These donors have surplus that matches your active requests. Reach out or claim directly.</p>
+      <div class="matches-grid" id="matches-grid"></div>
+    </div>
+
+    <!-- ── MESSAGES ── -->
+    <div class="page-view" id="page-messages">
+      <div class="topbar"><h1>Messages</h1></div>
+      <div class="msg-layout">
+        <div class="msg-list-panel">
+          <div class="msg-list-head">Conversations</div>
+          <div class="msg-threads" id="thread-list"></div>
+        </div>
+        <div class="msg-main">
+          <div class="msg-head-bar">
+            <div class="msg-avatar" id="chat-avatar">SK</div>
+            <div>
+              <div class="msg-head-name" id="chat-name">Saffron Kitchen</div>
+              <div class="msg-head-sub" id="chat-sub">Donor · MG Road</div>
+            </div>
+          </div>
+          <div class="msg-body" id="msg-body"></div>
+          <div class="msg-input-row">
+            <input class="msg-inp" id="msg-inp" type="text" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendMsg()"/>
+            <button class="send-btn" onclick="sendMsg()">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- POST REQUEST MODAL -->
+<div class="modal-overlay" id="post-modal" onclick="if(event.target===this)closeModal('post-modal')">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-head">
+      <h3>Post a request</h3>
+      <button class="modal-close" onclick="closeModal('post-modal')">×</button>
+    </div>
+    <p class="modal-sub">Tell donors what your organisation needs right now.</p>
+    <div id="post-err" class="err-msg"></div>
+    <div class="field">
+      <label>Category needed</label>
+      <div style="display:flex;gap:8px;margin-top:4px" id="post-cat-pills">
+        <div class="cpill" onclick="selPostCat('clothes',this)">👗 Clothes</div>
+        <div class="cpill" onclick="selPostCat('books',this)">📚 Books</div>
+        <div class="cpill" onclick="selPostCat('food',this)">🍱 Food</div>
+      </div>
+    </div>
+    <div class="field"><label>Request title</label><input type="text" id="post-title" placeholder="e.g. 80 meals for night shelter"/></div>
+    <div class="field"><label>Description</label><textarea id="post-desc" placeholder="Sizes, quantities, dietary needs, specific items…"></textarea></div>
+    <div class="field"><label>Quantity needed</label><input type="text" id="post-qty" placeholder="e.g. 80 meals, 50 kg rice, 60 uniforms…"/></div>
+    <div class="field">
+      <label>Urgency</label>
+      <div style="display:flex;gap:8px;margin-top:4px" id="post-urgency">
+        <div class="upill" onclick="selUrgency('high',this)">🔴 Tonight</div>
+        <div class="upill" onclick="selUrgency('mid',this)">🟡 This week</div>
+        <div class="upill" onclick="selUrgency('low',this)">🟢 This month</div>
+      </div>
+    </div>
+    <div class="field"><label>Pickup location</label><input type="text" id="post-loc" placeholder="Your area in Bengaluru"/></div>
+    <button class="btn btn-primary" id="post-btn" style="width:100%;margin-top:8px" onclick="submitRequest()">Post request →</button>
+  </div>
+</div>
+
+<script src="supabase.js"></script>
+<script src="ngo-dashboard.js"></script>
+</body>
+</html>

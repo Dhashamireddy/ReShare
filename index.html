@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Give & Gather — Donate Clothes, Books & Food</title>
+  <meta name="description" content="Give & Gather connects donors of clothes, books, and food with NGOs nearby — real-time, local, and free."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <a class="nav-logo" href="index.html">Give &amp; <em>Gather</em></a>
+  <ul class="nav-links">
+    <li><a href="#donations" class="active">Browse</a></li>
+    <li><a href="#requests">NGO Requests</a></li>
+    <li><a href="#how">How It Works</a></li>
+  </ul>
+  <div class="nav-actions">
+    <span class="nav-pill" id="nav-city">Live in 6 cities</span>
+    <a href="login.html" class="btn btn-outline btn-sm" id="nav-auth">Sign in</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="max-width:900px;margin:0 auto;padding:4.5rem 1.5rem 3rem;text-align:center">
+  <span style="display:inline-block;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-muted);border:1px solid var(--border);border-radius:20px;padding:5px 14px;margin-bottom:1.5rem">♻ Community Donation Network</span>
+  <h1 style="font-size:clamp(2.4rem,6vw,4rem);line-height:1.15;margin-bottom:1.2rem">One person's surplus is another's <em style="color:var(--clothes)">treasure.</em></h1>
+  <p style="font-size:1.05rem;color:var(--ink-muted);max-width:520px;margin:0 auto 2rem">Give & Gather connects donors of clothes, books, and food with NGOs and individuals nearby — real-time, local, free.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a href="#donations" class="btn btn-primary">Browse donations</a>
+    <button class="btn btn-outline" onclick="openDonateModal()">Donate something</button>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-row">
+  <span class="ticker-label">Live</span>
+  <div class="ticker-track">
+    <span class="ticker-item">👗 42 winter jackets available · Koramangala</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">🍱 15 lunch boxes ready · Saffron Kitchen, MG Road · 90 min left</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">📚 200 textbooks donated · Indiranagar</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">👟 Children's shoes (size 4–7) · Jayanagar</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">🌾 Ration kits needed for 30 families · Hennur NGO</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">📖 Competitive exam books available · HSR Layout</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <!-- duplicate for infinite scroll -->
+    <span class="ticker-item">👗 42 winter jackets available · Koramangala</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">🍱 15 lunch boxes ready · Saffron Kitchen, MG Road</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">📚 200 textbooks donated · Indiranagar</span>
+    <span style="color:rgba(255,255,255,.2)">·</span>
+    <span class="ticker-item">👟 Children's shoes (size 4–7) · Jayanagar</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat"><span class="stat-num" id="cnt-meals">0</span><div class="stat-label">Meals shared</div></div>
+  <div class="stat"><span class="stat-num" id="cnt-donors">0</span><div class="stat-label">Active donors</div></div>
+  <div class="stat"><span class="stat-num" id="cnt-ngos">0</span><div class="stat-label">NGO partners</div></div>
+</div>
+
+<!-- DONATIONS -->
+<section class="section" id="donations">
+  <div class="sec-head">
+    <h2>Live donations</h2>
+    <span id="donation-count" style="font-size:13px;color:var(--ink-muted)"></span>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="search-wrap">
+    <input type="text" id="search-input" placeholder="Search donations — clothes, books, food, area…" oninput="onSearch(this.value)"/>
+  </div>
+  <div class="cat-tabs">
+    <button class="cat-tab sel-all" data-cat="all" onclick="filterCat('all',this)"><span class="dot" style="background:#888"></span>All</button>
+    <button class="cat-tab" data-cat="clothes" onclick="filterCat('clothes',this)"><span class="dot" style="background:var(--clothes)"></span>Clothes</button>
+    <button class="cat-tab" data-cat="books" onclick="filterCat('books',this)"><span class="dot" style="background:var(--books)"></span>Books</button>
+    <button class="cat-tab" data-cat="food" onclick="filterCat('food',this)"><span class="dot" style="background:var(--food)"></span>Food</button>
+  </div>
+
+  <div class="cards-grid" id="cards-grid">
+    <div class="empty"><div class="empty-icon">⏳</div><h3>Loading donations…</h3></div>
+  </div>
+  <div class="load-more-wrap">
+    <button class="btn btn-outline btn-sm hidden" id="load-more-btn" onclick="loadMore()">Load more donations</button>
+  </div>
+</section>
+
+<!-- DONATE CTA -->
+<section class="section" style="padding-top:0">
+  <div class="donate-banner">
+    <div>
+      <h2>Have something to give?</h2>
+      <p>Takes 2 minutes. We'll match it with an NGO or family in your neighbourhood.</p>
+      <div class="donate-cats">
+        <button class="dcb dcb-clothes" onclick="openDonateModal('clothes')">👗 Clothes</button>
+        <button class="dcb dcb-books"   onclick="openDonateModal('books')">📚 Books</button>
+        <button class="dcb dcb-food"    onclick="openDonateModal('food')">🍱 Food</button>
+      </div>
+    </div>
+    <div class="impact-num">
+      <span class="impact-big" id="cnt-items">0</span>
+      <div class="impact-sub">items rescued<br>this month</div>
+    </div>
+  </div>
+</section>
+
+<!-- NGO REQUESTS -->
+<section class="section" id="requests">
+  <div class="sec-head">
+    <h2>What NGOs need right now</h2>
+    <a href="#" class="sec-link">All requests →</a>
+  </div>
+  <div class="cards-grid" id="requests-grid">
+    <div class="empty"><div class="empty-icon">⏳</div><h3>Loading requests…</h3></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <div class="how-inner">
+    <h2>Simple as three steps</h2>
+    <div class="how-steps">
+      <div class="how-step"><span class="step-num">01</span><div class="step-title">Post your donation</div><p class="step-desc">List what you have — clothes, books, or food — with a quick description and your area. Takes 2 minutes.</p></div>
+      <div class="how-step"><span class="step-num">02</span><div class="step-title">We match it instantly</div><p class="step-desc">Our network alerts nearby NGOs and individuals who need exactly what you have, right now.</p></div>
+      <div class="how-step"><span class="step-num">03</span><div class="step-title">Handoff &amp; done</div><p class="step-desc">Arrange a pickup or drop-off. Track the impact so you know exactly where your gift went.</p></div>
+    </div>
+  </div>
+</div>
+
+<footer class="main-footer">
+  <span class="footer-logo">Give &amp; <em>Gather</em></span>
+  <span class="footer-note">© 2026 · Built with care in Bengaluru</span>
+</footer>
+
+<!-- DONATE MODAL -->
+<div class="modal-overlay" id="donate-modal" onclick="overlayClose(event,'donate-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Post a donation</h3>
+      <button class="modal-close" onclick="closeModal('donate-modal')">×</button>
+    </div>
+    <p class="modal-sub">Tell us what you'd like to give and we'll find a match nearby.</p>
+    <div id="donate-err" class="err-msg"></div>
+    <div class="field">
+      <label>Category</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px" id="donate-cat-pills">
+        <div class="cpill" onclick="selDonCat('clothes',this)">👗 Clothes</div>
+        <div class="cpill" onclick="selDonCat('books',this)">📚 Books</div>
+        <div class="cpill" onclick="selDonCat('food',this)">🍱 Food</div>
+      </div>
+    </div>
+    <div class="field"><label>What are you donating?</label><input type="text" id="don-title" placeholder="e.g. 20 children's books, 5 jackets, 10 meal boxes…"/></div>
+    <div class="field"><label>Quantity / amount</label><input type="text" id="don-qty" placeholder="e.g. 15 items, 8 kg, 30 portions…"/></div>
+    <div class="field"><label>Your area</label><input type="text" id="don-area" placeholder="e.g. Indiranagar, HSR Layout…"/></div>
+    <div class="field"><label>Available until</label><input type="text" id="don-expiry" placeholder="e.g. Today evening, This weekend, Open pickup…"/></div>
+    <div class="field"><label>Extra notes (optional)</label><textarea id="don-notes" placeholder="Condition, sizes, pick-up instructions…"></textarea></div>
+    <button class="btn btn-primary" id="don-btn" style="width:100%;margin-top:4px" onclick="submitDonation()">Post donation →</button>
+  </div>
+</div>
+
+<!-- CLAIM MODAL -->
+<div class="modal-overlay" id="claim-modal" onclick="overlayClose(event,'claim-modal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="claim-title">Claim donation</h3>
+      <button class="modal-close" onclick="closeModal('claim-modal')">×</button>
+    </div>
+    <p class="modal-sub">Let the donor know you're coming. We'll share their contact once confirmed.</p>
+    <div id="claim-err" class="err-msg"></div>
+    <div class="field"><label>Your name or organisation</label><input type="text" id="claim-name" placeholder="Name / NGO name…"/></div>
+    <div class="field"><label>Phone number</label><input type="tel" id="claim-phone" placeholder="+91 …"/></div>
+    <div class="field"><label>Preferred pickup time</label><input type="text" id="claim-time" placeholder="e.g. Today 5pm, Tomorrow morning…"/></div>
+    <div class="field"><label>Note to donor (optional)</label><textarea id="claim-note" placeholder="Any details that help…"></textarea></div>
+    <button class="btn btn-primary" id="claim-btn" style="width:100%;margin-top:4px" onclick="submitClaim()">Confirm claim →</button>
+  </div>
+</div>
+
+<script src="supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

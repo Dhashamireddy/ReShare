@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Give & Gather — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<div class="login-page">
+
+  <!-- LEFT PANEL -->
+  <div class="login-left">
+    <a class="ll-logo" href="index.html">Give &amp; <em>Gather</em></a>
+    <div class="ll-body">
+      <h1>Where surplus finds its <em>purpose.</em></h1>
+      <p>Connect as a donor or NGO — turn everyday surplus into real community impact, one item at a time.</p>
+      <div class="ll-stats">
+        <div><span class="ll-stat-num">4,821</span><span class="ll-stat-lbl">Meals shared</span></div>
+        <div><span class="ll-stat-num">9,340</span><span class="ll-stat-lbl">Items rescued</span></div>
+        <div><span class="ll-stat-num">47</span><span class="ll-stat-lbl">NGO partners</span></div>
+      </div>
+    </div>
+    <span class="ll-footer">© 2026 Give &amp; Gather · Bengaluru</span>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="login-right">
+    <div class="login-box">
+
+      <!-- STEP 1: role -->
+      <div class="login-step active" id="step-role">
+        <h2>Welcome</h2>
+        <p class="sub">Choose how you're joining today.</p>
+        <div class="role-cards">
+          <div class="role-card" id="rc-donor" onclick="selectRole('donor')">
+            <div class="role-icon" style="background:var(--clothes-bg)">🤲</div>
+            <div>
+              <div class="role-card-title">I'm a donor</div>
+              <div class="role-card-desc">Share clothes, books, or food with those who need them</div>
+            </div>
+            <div class="role-check" id="chk-donor">✓</div>
+          </div>
+          <div class="role-card" id="rc-ngo" onclick="selectRole('ngo')">
+            <div class="role-icon" style="background:var(--books-bg)">🏛</div>
+            <div>
+              <div class="role-card-title">I represent an NGO</div>
+              <div class="role-card-desc">Post requests, view matches, and coordinate with donors</div>
+            </div>
+            <div class="role-check" id="chk-ngo">✓</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="role-next" style="width:100%" onclick="goToSignIn()" disabled>Continue →</button>
+        <div class="toggle-auth" style="margin-top:1.2rem">New here? <a onclick="goToSignUp()">Create an account</a></div>
+      </div>
+
+      <!-- STEP 2: Sign In -->
+      <div class="login-step" id="step-signin">
+        <button class="back-btn" onclick="showStep('step-role')">← Back</button>
+        <div class="pdots"><div class="pdot"></div><div class="pdot on"></div></div>
+        <div class="ngo-badge" id="si-badge" style="display:none">NGO Portal</div>
+        <h2>Sign in</h2>
+        <p class="sub" id="si-sub">Welcome back, donor.</p>
+        <div id="si-error" class="err-msg"></div>
+        <div class="field"><label>Email address</label><input type="email" id="si-email" placeholder="you@example.com"/></div>
+        <div class="field"><label>Password</label><input type="password" id="si-pw" placeholder="••••••••"/></div>
+        <button class="btn btn-primary" id="si-btn" style="width:100%" onclick="handleSignIn()">Sign in →</button>
+        <div class="divider">or</div>
+        <div class="toggle-auth">No account? <a onclick="goToSignUp()">Sign up free</a></div>
+      </div>
+
+      <!-- STEP 3: Sign Up -->
+      <div class="login-step" id="step-signup">
+        <button class="back-btn" onclick="showStep('step-role')">← Back</button>
+        <div class="pdots"><div class="pdot"></div><div class="pdot on"></div></div>
+        <div class="ngo-badge" id="su-badge" style="display:none">NGO Portal</div>
+        <h2>Create account</h2>
+        <p class="sub" id="su-sub">Join as a donor.</p>
+        <div id="su-error" class="err-msg"></div>
+        <div class="field-row">
+          <div class="field"><label>First name</label><input type="text" id="su-first" placeholder="Ashmi"/></div>
+          <div class="field"><label>Last name</label><input type="text" id="su-last" placeholder="Kamath"/></div>
+        </div>
+        <div class="field" id="su-org-wrap" style="display:none"><label>Organisation name</label><input type="text" id="su-org" placeholder="e.g. Roti Bank, Paathshala Trust…"/></div>
+        <div class="field"><label>Email address</label><input type="email" id="su-email" placeholder="you@example.com"/></div>
+        <div class="field"><label>Phone number</label><input type="tel" id="su-phone" placeholder="+91 …"/></div>
+        <div class="field"><label>Area / neighbourhood</label><input type="text" id="su-area" placeholder="e.g. Koramangala, HSR Layout…"/></div>
+        <div class="field"><label>Password</label><input type="password" id="su-pw" placeholder="Min 6 characters"/></div>
+        <button class="btn btn-primary" id="su-btn" style="width:100%" onclick="handleSignUp()">Create account →</button>
+        <div class="divider">or</div>
+        <div class="toggle-auth">Already registered? <a onclick="goToSignIn()">Sign in</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="supabase.js"></script>
+<script src="login.js"></script>
+</body>
+</html>
