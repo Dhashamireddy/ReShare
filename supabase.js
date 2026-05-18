@@ -1,14 +1,13 @@
-// 1. Centralized Configuration
-// This will automatically pull the live keys from Vercel's Environment Variables
+// Centralized Configuration (Safe for regular vanilla JS script files)
 const SUPABASE_URL = 
-  process.env.NEXT_PUBLIC_SUPABASE_URL || 
-  import.meta.env?.VITE_SUPABASE_URL;
+  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_URL) || 
+  'https://YOUR_PROJECT.supabase.co'; // Replace with your actual Supabase URL if not using a build bundler
 
 const SUPABASE_ANON = 
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 
-  import.meta.env?.VITE_SUPABASE_ANON_KEY;
+  (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY) || 
+  'YOUR_ANON_KEY'; // Replace with your actual anon key if not using a build bundler
 
-// 2. Custom Lightweight Supabase Client
+// Custom Lightweight Supabase Client
 const sb = {
   /**
    * Signs up a new user and automatically populates their profile in the custom profiles table.
@@ -30,7 +29,6 @@ const sb = {
     
     const authData = await authResponse.json();
     
-    // If Supabase Auth returns an error, stop here and bubble it up
     if (authData.error) {
       throw new Error(authData.error.message || authData.msg);
     }
@@ -43,7 +41,6 @@ const sb = {
         headers: {
           'Content-Type': 'application/json',
           'apikey': SUPABASE_ANON,
-          // Attaches the user's secure token so Row Level Security (RLS) knows who is writing
           'Authorization': `Bearer ${authData.access_token}`, 
         },
         body: JSON.stringify({ 
@@ -55,7 +52,6 @@ const sb = {
         }),
       });
 
-      // Optional check to ensure profile creation didn't fail quietly
       if (!profileResponse.ok) {
         const profileError = await profileResponse.json();
         console.warn("Auth succeeded, but profile creation failed:", profileError);
@@ -66,4 +62,9 @@ const sb = {
   }
 };
 
-export default sb;
+// Make it available globally if not using modules, otherwise export it
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = sb;
+} else {
+  window.sb = sb;
+}
